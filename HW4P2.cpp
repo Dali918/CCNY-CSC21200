@@ -20,12 +20,7 @@ int main()
     // cout << "----------------------------------------------" << endl;
     /*****************************************/
 
-    string line;
-    int num =1;
-    while()){
-        cout<<"This line number: "<<num<<" it says: "<<line<<endl;
-        num++;
-    }
+    
 
     return 0;
 
