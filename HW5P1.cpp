@@ -91,7 +91,7 @@ Node &Node::operator=(const Node &node)
 
 ostream &operator<<(ostream &out, const Node &node)
 {
-    out << "Node - " << node.nodeID << endl;
+    out << "Node ID - " << node.nodeID << endl;
     out << node.car << endl;
     return out;
 }
@@ -108,7 +108,7 @@ public:
     // LinkedList(const LinkedList &list);
     LinkedList(Node &node);
     ~LinkedList();
-    void setHead(Node &node) { this->head = &node; }
+    void setHead(Node *node) { this->head = node; }
     Node *getHead() { return this->head; }
     // public methods
     void insertFirst(Node &node);
@@ -129,30 +129,6 @@ void LinkedList::insertFirst(Node &node)
     node.setNext(this->head);
     this->head = &node;
 }
-// LinkedList::LinkedList(const LinkedList &list)
-// {
-//     LinkedList(); // make default linked list with head set to null,
-//     if (list.head != NULL)
-//     {
-//         this->head->car = list.head->car;
-//         Node *current = list.head->next_ptr;
-//         Node node;
-//         while (current != NULL)
-//         {
-//             node = *current;
-//         }
-//     }
-// }
-
-void LinkedList::traverse()
-{
-    Node *current = this->head;
-    while (current != NULL)
-    {
-        cout << *current << endl;
-        current = current->next_ptr;
-    }
-}
 
 LinkedList::~LinkedList()
 {
@@ -168,23 +144,63 @@ LinkedList::~LinkedList()
 
     cout << "DONE DELETING LINKED LIST" << endl;
 }
+
+void LinkedList::traverse()
+{
+    Node *current = this->head;
+    while (current != NULL)
+    {
+        cout << *current << endl;
+        current = current->next_ptr;
+    }
+}
+
+// Calculate the average price of the cars contained in the list
+int calcAverage(LinkedList &list)
+{
+    int count = 0, sum = 0;
+    Node *current = list.getHead();
+    while (current != NULL)
+    {
+        sum += current->getCar().m_price; // add car price to sum
+        count++;
+        current = current->getNext(); // go to next node in list
+    }
+
+    return sum / count;
+}
+
+// Provide the details for all cars more expensive than the average price
+void printAboveAverage(LinkedList &list)
+{
+    int average = calcAverage(list), price; // get average
+    Node *current = list.getHead();
+    while (current != NULL)
+    {
+        price = current->getCar().m_price;
+        if (price > average)
+            cout << *current << endl; // print node above average
+        current = current->getNext(); // get next node
+    }
+}
+
 int main()
 {
-    string Name;
-    /*****************************************/
-    cout << "Student Enter Name" << endl;
-    cin >> Name;
-    cout << "---------  -------------------------------------" << endl;
-    cout << "FIle: " << __FILE__ << " Date: " << __DATE__ << endl;
-    cout << "Student Name: " << Name << endl;
-    cout << "----------------------------------------------" << endl;
+    // string Name;
+    // /*****************************************/
+    // cout << "Student Enter Name" << endl;
+    // cin >> Name;
+    // cout << "---------  -------------------------------------" << endl;
+    // cout << "FIle: " << __FILE__ << " Date: " << __DATE__ << endl;
+    // cout << "Student Name: " << Name << endl;
+    // cout << "----------------------------------------------" << endl;
     /*****************************************/
     LinkedList list;
     Car car;
-    int len = 2;
+    Node *current = NULL;
+    int len = 2, price, average;
     cout << "Populate linked list" << endl;
     string model, owner;
-    int price;
     for (int i = 0; i < len; i++)
     {
         cout << "Enter the model, owner's name and price of the car ($2500 – $12,500) to the nearest whole number" << endl;
@@ -193,17 +209,44 @@ int main()
         cin >> model >> owner >> price;
         cout << "You entered: " << endl;
         cout << "Model: " << model << " Owner: " << owner << " Price: " << price << endl;
-        cout << "----------------------------------------------\n" << endl;
+        cout << "----------------------------------------------\n"
+             << endl;
         // creating node
         car.m_model = model;
         car.m_owner = owner;
         car.m_price = price;
         // dynamically allocate memory
-        Node *node = new Node(0, model, owner, price);
-        list.insertFirst(*node);
+        current = new Node(0, model, owner, price);
+        list.insertFirst(*current);
     }
 
     cout << endl;
 
+    list.traverse();
+    // Calculate the average price of the cars contained in the list
+    average = calcAverage(list);
+    cout << "The average price is: $" << average << endl;
+    cout << endl;
+    cout << "The following are above average: " << endl;
+    // Provide the details for all cars more expensive than the average price
+    printAboveAverage(list);
+    // Remove all Cars having a price less than 25% of average price
+    current = list.getHead();
+    Node *prev = current->getNext();
+    while (current != NULL)
+    {
+        if (current->getCar().m_price < 0.25 * average)
+        {
+
+            if (current == list.getHead())
+                list.setHead(current->getNext());
+            else
+                prev->setNext(current->getNext());
+            delete current;
+            current = NULL;
+        }
+    }
+    // Print new list
+    cout << "Updated list (cars over 25% of average)" << endl;
     list.traverse();
 }
