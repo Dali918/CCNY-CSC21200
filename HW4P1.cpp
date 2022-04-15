@@ -6,6 +6,12 @@ using namespace std;
 
 int main()
 {
+    /*Write a short program that reads phrases from the input stream and stores each new
+    line into an array of C++ strings. For each new line, the program computes the
+    numeric sum value of each phrase terminated with ‘\n’. For the following section of
+    the Gettysburg Address store the numeric values of each phrase into a int cnt[32]
+    array.*/
+    
     string Name;
     /*****************************************/
     cout << "Student Enter Name" << endl;
@@ -47,7 +53,7 @@ int main()
         if (index < count_len)
         {
             cout << "Inputting at index: " << index << endl;
-            line_array[index] = line;   //insert phrase in string array
+            line_array[index] = line; // insert phrase in string array
             count_arr[index++] = sum; // insert sum of phrase in sum array and increment index
         }
         else
@@ -61,7 +67,7 @@ int main()
     // print sums
     for (int i = 0; i < count_len; i++)
     {
-        if (count_arr[i] == 0)  //stop when sum is empty
+        if (count_arr[i] == 0) // stop when sum is empty
             break;
         cout << "line: " << i + 1 << " sum: " << count_arr[i] << endl;
         cout << "Phrase: " << line_array[i] << endl;
