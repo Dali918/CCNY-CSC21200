@@ -46,6 +46,7 @@ e) Check that the Stack is empty
 //#define DEBUG
 #include <iostream>
 using namespace std;
+int TotalCnt = 0;
 
 struct ListNode
 {
@@ -53,15 +54,16 @@ struct ListNode
     int count;
     ListNode *link; // LinkList pointer
 };
-int TotalCnt = 0;
-ListNode *createLink(string name, int count)
+
+ListNode *createLink(string item, int count)
 {
 
     ListNode *current = new ListNode; // create 1st node
+    current->Item = item;             // set link item
+    current->count = count;           // set link count / node ID
     current->link = NULL;             // set link pointer to NULL
 
     // cout << "Enter Item Name" << endl;
-    // ;
     // cin >> current->Item;
     // cout << "Enter count" << endl;
     // cin >> current->count;
@@ -73,26 +75,17 @@ ListNode *createLink(string name, int count)
 
 ListNode *addLink(ListNode *head, string name, int count)
 {
-    ListNode *current = new ListNode; // create new node
-    current->Item = name;
-    current->count = count;
-
-    // cout << "Enter Item Name" << endl; // fill it up  â€¦.!!!!
-    // cin >> current->Item;
-    // cout << "Enter count" << endl;
-    // cin >> current->count;
-
-    current->link = head; // add as a first node
-    head = current;       // update head address to bucrrent
-#ifdef DEBUG
-    cout << "addLink:  head = " << head << endl;
-    cout << "addLink:  current->link= " << current->link << endl;
-#endif
-
-    // TotalCnt++;
-
-    return head; // return new head address
+    ListNode *current = createLink(name, count); // create a new link
+    current->link = head;                        // add as a first node
+    head = current;                              // update head address to current
+    return head;                                 // return new head address
 } // end of addLink
+
+void PrintLink(ListNode *node) // Added Print Link function
+{
+    cout << "Node->Item = " << node->Item << endl;
+    cout << "Node->count = " << node->count << endl;
+}
 
 void PrintList(ListNode *head)
 {
@@ -105,9 +98,7 @@ void PrintList(ListNode *head)
 
     while (temp != NULL)
     {
-        cout << "temp->Item = " << temp->Item << endl;
-        cout << "temp->count = " << temp->count << endl;
-
+        PrintLink(temp);    //print the current link
         temp = temp->link; // move to next node
     }
 
@@ -128,15 +119,16 @@ int findList(ListNode *head, string Object)
             cout << "Object found at Node #" << NodeId << endl;
             cout << "temp->Item = " << temp->Item << endl;
             cout << "temp->count = " << temp->count << endl;
+            return NodeId;
         }
         NodeId++;
         temp = temp->link; // move to next node
     }
-    return NodeId;
+    return -1; // return -1 if node not found
 
 } // end of findList( )
 
-void deleteLink(ListNode **head, int Link)  //changed delete link to take double pointers
+void deleteLink(ListNode **head, int Link) // changed delete link to take double pointers
 {
     ListNode *temp = *head; // copy head address
     ListNode *out = *head;  // address of node to be killed
@@ -152,14 +144,20 @@ void deleteLink(ListNode **head, int Link)  //changed delete link to take double
         if (NodeId == Link)
         {
             out = temp;
-            (temp == *head) ? *head = temp->link : prev->link = temp->link; //change head or previous link
+            (temp == *head) ? *head = temp->link : prev->link = temp->link; // change head or previous link
+
+            cout << "Deleting Node from list:" << endl;
+            PrintLink(out);
+            cout << "------------------------------" << endl;
             delete out;
-            break;
+            return;
         }
         NodeId++;
         temp = temp->link; // move to next node
     }                      // end of while loop
 
+    cout << "Could not find Node to Delete" << endl;
+    cout << "---------------------------------" << endl;
 } // end of  deleteList()
 void insertLink(ListNode *head, int Link)
 {
@@ -275,7 +273,7 @@ a) The problem should fill the stack with the following list of fruits with
     // c) Remove 3 fruits and Print the remaining list of fruits
     for (int i = 0; i < 3; i++)
     {
-        Pop(&head);
+        Pop(&head); //takes double pointer arguments
     }
     Print(head);
     // d) Peak into the Stack and print the corresponding fruit/count
