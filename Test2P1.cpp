@@ -244,6 +244,17 @@ void Print(ListNode *node)
 
 int main()
 {
+     string Name;
+    /*****************************************/
+    cout << "Student Enter Name" << endl;
+    cin >> Name;
+    cout << "---------  -------------------------------------" << endl;
+    cout << "FIle: " << __FILE__ << " Date: " << __DATE__ << endl;
+    cout << "Student Name: " << Name << endl;
+    cout << "----------------------------------------------" << endl;
+    /*****************************************/
+
+    
     const int len = 10;
     int count = 0;
     ListNode *head = NULL;
