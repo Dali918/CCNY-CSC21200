@@ -24,9 +24,9 @@ Node *createNode(string phrase, int id) // function that creates and returns obj
 
 void PrintNode(Node *node) // function that prints Node data
 {
-    cout << "Node data: " << node->data << endl;
-    cout << "Node id: " << node->id << endl;
-    cout << "Node Hash (Index): " << node->hash << endl;
+    cout << "Node data: " << node->data;
+    cout << " | Node id: " << node->id;
+    cout << " | Node Hash (LL Index): " << node->hash << endl;
     cout << "------------------" << endl;
 }
 
@@ -94,24 +94,11 @@ int computeHash(string phrase) // function to compute hash
 
     return sum % key;
 }
-void find(string phrase)
-{
-    // int index = computeHash(phrase);
-    // Node* head;
-    // try{
-    //     if(index<)
-
-    // }catch(string error){
-    //     cout<<"WORD CANNOT BE FOUND"<<endl;
-    //     return
-
-    // }
-}
 /******************Code/Phrase Generator*********************/
 vector<string> createWords() // function to make vector of phrases
 {
-    //Makes Five letter word paritions of "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    //48 words : ABCDE BCDEF CDEFG DEFGH EFGHI FGHIJ ........ VWXYZ WXYZa XYZab YZabc Zabcd abcde  ... vwxyz
+    // Makes Five letter word paritions of "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    // 48 words : ABCDE BCDEF CDEFG DEFGH EFGHI FGHIJ ........ VWXYZ WXYZa XYZab YZabc Zabcd abcde  ... vwxyz
 
     const int len = 26;
     const int phrase_size = 5;
@@ -146,7 +133,7 @@ vector<string> createWords() // function to make vector of phrases
 
 int main()
 {
-     string Name;
+    string Name;
     /*****************************************/
     cout << "Student Enter Name" << endl;
     cin >> Name;
@@ -156,14 +143,12 @@ int main()
     cout << "----------------------------------------------" << endl;
     /*****************************************/
 
-
     const int len = 13;
-    vector<string> words = createWords();   //vector with phrases
-    Node **HashTable = new Node *[len]      //Hash Tabel with linked list pointers set to NULL
+    vector<string> words = createWords(); // vector with phrases
+    Node **HashTable = new Node *[len]    // Hash Table with linked list pointers set to NULL
     { NULL };
-    int linkedListCount[len]{0};            //Linked List count array 
+    int linkedListCount[len]{0}; // Linked List count array
     int count = 0;
-
 
     for (string phrase : words)
     {
@@ -172,32 +157,30 @@ int main()
         // insert with head@index, phrase, increment linked list size
         HashTable[index] = insertFirst(HashTable[index], phrase, ++linkedListCount[index]);
     }
-   
 
-    // Print Hash Table List
+    // Print Hash Table Link;
     for (int i = 0; i < len; i++)
     {
-        cout << "Linked List at Index: " << i << " | Linked List Length: " << linkedListCount[i] << endl;
+        cout << "Linked List at Index: " << i << " | Linked List Length (NodeCnt): " << linkedListCount[i] << endl;
         PrintList(HashTable[i]);
         cout << "**************************************" << endl;
     }
 
     // Test to find phrases
-    string test_bench[6]{"BCDEF", "EFGHI", "Zabcd", "abcde", "vwxyz", "AbCdE"};     //test bench
+    string test_bench[6]{"BCDEF", "EFGHI", "Zabcd", "abcde", "vwxyz", "AbCdE"}; // test bench
     for (string phrase : test_bench)
     {
-        int index = computeHash(phrase);        //calculate hash
-        Node *node = HashTable[index];      //Get linked list head at index
-        bool found = false;                 //found flag
+        int index = computeHash(phrase); // calculate hash
+        Node *node = HashTable[index];   // Get linked list head at index
+        bool found = false;              // found flag
 
         cout << "Test Phrase: " << phrase << endl;
         while (node != NULL) // traverse linked list for word
         {
             if (node->data == phrase) // print node details if phrase was found
             {
-                cout << "Found: " << phrase;
-                cout << " | Hash Index: " << index;
-                cout << " | Node ID: " << node->id << endl;
+                cout << "FOUND"<<endl;
+                PrintNode(node);
                 found = true;
                 break;
             }
@@ -217,8 +200,6 @@ int main()
         {
             cout << error << endl; // print error message
         }
-
-        cout << "----------------------" << endl;
     }
 
     // deallocate linked lists from memory
@@ -226,5 +207,5 @@ int main()
     {
         deleteLinkedList(HashTable[i]);
     }
-    delete HashTable;       //deallocate hash table from memory
+    delete HashTable; // deallocate hash table from memory
 }

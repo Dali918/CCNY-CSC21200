@@ -83,8 +83,8 @@ ListNode *addLink(ListNode *head, string name, int count)
 
 void PrintLink(ListNode *node) // Added Print Link function
 {
-    cout << "Node->Item = " << node->Item << endl;
-    cout << "Node->count = " << node->count << endl;
+    cout << "Node->Item = " << node->Item;
+    cout << ", Node->count = " << node->count << endl;
 }
 
 void PrintList(ListNode *head)
@@ -94,12 +94,17 @@ void PrintList(ListNode *head)
     cout << " ----------- " << endl;
 
     if (temp == NULL)
-        cout << "Empty List " << endl;
-
-    while (temp != NULL)
     {
-        PrintLink(temp);    //print the current link
-        temp = temp->link; // move to next node
+        cout << "Empty List " << endl;
+    }
+    else
+    {
+        cout << "Total Count: " << TotalCnt << endl;
+        while (temp != NULL)
+        {
+            PrintLink(temp);   // print the current link
+            temp = temp->link; // move to next node
+        }
     }
 
     return;
@@ -128,11 +133,10 @@ int findList(ListNode *head, string Object)
 
 } // end of findList( )
 
-void deleteLink(ListNode **head, int Link) // changed delete link to take double pointers
+ListNode *deleteLink(ListNode *head, int Link) // changed delete to be nonvoid (returns head)
 {
-    ListNode *temp = *head; // copy head address
-    ListNode *out = *head;  // address of node to be killed
-    ListNode *prev = *head; // pointer to previous node
+    ListNode *temp = head; // copy head address
+    ListNode *prev = head; // pointer to previous node
 
     int NodeId = 1;
 
@@ -140,24 +144,25 @@ void deleteLink(ListNode **head, int Link) // changed delete link to take double
 
     while (temp != NULL)
     {
-        prev = temp;
+
         if (NodeId == Link)
         {
-            out = temp;
-            (temp == *head) ? *head = temp->link : prev->link = temp->link; // change head or previous link
+            (temp == head) ? head = temp->link : prev->link = temp->link; // change head or =rewire previous's link pointer
 
             cout << "Deleting Node from list:" << endl;
-            PrintLink(out);
+            PrintLink(temp);
             cout << "------------------------------" << endl;
-            delete out;
-            return;
+            delete temp;
+            return head;
         }
         NodeId++;
+        prev = temp;
         temp = temp->link; // move to next node
     }                      // end of while loop
 
     cout << "Could not find Node to Delete" << endl;
     cout << "---------------------------------" << endl;
+    return head;
 } // end of  deleteList()
 void insertLink(ListNode *head, int Link)
 {
@@ -215,17 +220,20 @@ ListNode *Push(ListNode *node, string name, int count)
     return addLink(node, name, count);
 }
 // 3) StacK_ptr Pop(Stack_ptr) - which removes the most recent node
-void Pop(ListNode **node)
+ListNode *Pop(ListNode *node)
 {
-    if (!Stack_Empty(*node))
+    if (!Stack_Empty(node))
     {
-        deleteLink(node, 1);
-        TotalCnt--; // decrement total count
+
+        TotalCnt--;                 // decrement total count
+        node = deleteLink(node, 1); // remove current head
     }
     else
     {
         cout << "Stack is Empty!" << endl;
     }
+
+    return node; // return head
 }
 // 4) string Stack_Peak(Stack_ptr) - which returns the fruit name of the top node
 string Stack_Peak(ListNode *node)
@@ -244,7 +252,7 @@ void Print(ListNode *node)
 
 int main()
 {
-     string Name;
+    string Name;
     /*****************************************/
     cout << "Student Enter Name" << endl;
     cin >> Name;
@@ -254,7 +262,6 @@ int main()
     cout << "----------------------------------------------" << endl;
     /*****************************************/
 
-    
     const int len = 10;
     int count = 0;
     ListNode *head = NULL;
@@ -284,7 +291,7 @@ a) The problem should fill the stack with the following list of fruits with
     // c) Remove 3 fruits and Print the remaining list of fruits
     for (int i = 0; i < 3; i++)
     {
-        Pop(&head); //takes double pointer arguments
+        head = Pop(head); // takes double pointer arguments
     }
     Print(head);
     // d) Peak into the Stack and print the corresponding fruit/count
@@ -293,7 +300,7 @@ a) The problem should fill the stack with the following list of fruits with
     //    d) Remove all fruits
     while (Stack_Empty(head) == 0)
     {
-        Pop(&head);
+        head = Pop(head);
     }
     // e) Check that the Stack is empty
     cout << "--------Peak After Clearing List------------" << endl;

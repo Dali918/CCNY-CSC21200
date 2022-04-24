@@ -1,0 +1,99 @@
+			Take Home Test #21
+			CSC 21200(51287) 
+				MW(Alef)
+			   Spring 2022
+
+
+Instructor: Yedidiah Solowiejczyk
+
+The exam consists of two(2)  programming questions.
+All students shall provide the source code as two (*.cpp) and a screen shot of resulting 
+output (legible…) on a Word document.
+
+All exams need to be emailed to my ysolowie@yahoo.com before Wednesday, April 27 (11:59 PM).  
+I want all exams to be sent to the above email address NOT Blackboard.  
+
+Late submission of exams  will not be accepted – leading to a grade of 0. It is your 
+responsibility make sure that the exam were electronically delivered.  Double check that 
+your exam did not get stuck in your output box.
+
+Each problem should be well-documented and contain the following header:
+cout << “------------------------------------------------------------------\n”; 
+cout << “Name: “ << Name << endl;
+cout << “FILE: “ << __FILE__ << “ DATE: “ << __DATE__ << endl;
+cout << “------------------------------------------------------------------\n”;
+
+/*******/
+Qustion#1
+/******/
+
+We developed in class a LinkedListC.cpp program that creates a working Singly
+Linked List that contains nodes that contain the name of a fruit(string) and how 
+many fruits it contains  (int cnt) as well as a pointer to the next node.
+
+Modify this LinkListC.cpp program to act as a Stack container which can stuff 
+as many fruits asthe user wants 
+
+The created Stack container should provide only  the following functions:
+1) bool Stack_Empty(Stack_ptr) - which informs user if the Stack is empty/full
+2) Stack_ptr Push(Stack_ptr) - which allows to push a new node into the Stack
+   and fills the appropriate fruit name and corresponding count.
+3) StacK_ptr Pop(Stack_ptr) - which removes the most recent node
+4) string Stack_Peak(Stack_ptr) - which returns the fruit name of the top node
+5) The number of nodes in the Stack should be stored in a global variable 
+   TotalNodeCnt
+6) void Print(Stack_ptr) function that allows the user to print the fruits in the Stack 
+   without popping them.
+
+Demonstrate:
+a) The problem should fill the stack with the following list of fruits with 
+   corresponding counts
+	Apple - 10
+	Bananas - 20
+	Cherry - 30
+	Date - 40
+	Endive - 50
+	Fig - 60
+	Guava - 70
+	Herb - 80
+	Iacamolo - 90
+        Java  - 100
+b) Print the entire list of stuffed fruits
+c) Remove 3 fruits and Print the remaining list of fruits
+d) Peak into the Stack and print the corresponding fruit/count
+d) Remove all fruits
+e) Check that the Stack is empty
+
+/*******/
+Qustion#2
+/******/
+
+You are employed by the CIA and you have received the following encypted  message that 
+contains the following(48 words):
+ABCDE BCDEF CDEFG DEFGH EFGHI FGHIJ ........ VWXYZ WXYZa XYZab YZabc Zabcd abcde  ... vwxyz.
+
+You need to do the following steps:
+
+(1)store each word into the Hash container that we discussed in class which 
+consists of a array of pointers to Link List Nodes and corresponding Link Lists.
+
+(2)Each word that you read off the above list is used as an input into a Hash function that 
+produces an index into the array of pointers to Link Lists. The Hash function computes the
+numerical sum of (word % KEY)
+
+(3)The array of pointers should contain 13 elements.
+
+(4)The Hash function should use a KEY value equal to 13
+
+(5)After storing all words in the Hash container, you should print all the words in each 
+   Link List and produce a NodeCnt for each printed list (make sure to identify each
+   LinkList# and its corresponding NodeCnt)
+
+(6)You should test that your Hash table informs you in which Link List/Node#  you find 
+   the target word (e.g. CDEFG).  Test your Hash container on the follwoing words
+      (a) BCDEF, EFGHI, Zabcd, abcde,vwxyz
+(7) If your target word cannot be found in Hash container, print "WORD CANNOT BE FOUND"
+    (e.g. AbCdE)
+
+
+
