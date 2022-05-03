@@ -42,7 +42,12 @@ Node *createNode(string name, int price)
     return node;
 }
 
-void insert(Node *root, Node *node)
+void printNode(Node *node)
+{
+    cout << "Name: " << node->name << ", Price: $" << node->price << ", left: " << node->left << ", right: " << node->right << endl;
+}
+
+Node *insert(Node *root, Node *node)
 {
     if (root == NULL)
     {
@@ -51,9 +56,54 @@ void insert(Node *root, Node *node)
     }
     else
     {
-        
-        cout << root << endl;
-        (node->price <= node->price) ? insert(root->left, node) : insert(root->right, node);
+
+        cout << "Root Price is $" << root->price << " address->" << root;
+        if (node->price <= root->price)
+        {
+
+            cout << ", Going left!" << endl;
+            root->left = insert(root->left, node);
+        }
+        else
+        {
+            cout << ", Going right!" << endl;
+            root->right;
+            root->right = insert(root->right, node);
+        }
+    }
+
+    return root;
+}
+
+void insertVoid(Node *root, Node *node)
+{
+
+    cout << "Root Price is $" << root->price << " address->" << root;
+    if (node->price <= root->price)
+    {
+        if (root->left == NULL)
+        {
+            cout<<"\nInserting!"<<endl;
+            root->left = node;
+        }
+        else
+        {
+            cout << ", Going left!" << endl;
+            insertVoid(root->left, node);
+        }
+    }
+    else
+    {
+        if (root->right == NULL)
+        {
+            cout<<"\nInserting!"<<endl;
+            root->right = node;
+        }
+        else
+        {
+            cout << ", Going right!" << endl;
+            insertVoid(root->right, node);
+        }
     }
 }
 
@@ -73,8 +123,8 @@ void Print(Node *root)
 {
     if (root != NULL)
     {
-        cout << "Name: " << root->name << " Price: $" << root->price << endl;
         Print(root->left);
+        printNode(root);
         Print(root->right);
     }
 }
@@ -91,19 +141,24 @@ void PrintL(Node *root)
 
 int main()
 {
-    int len = 5;
+    int len = 6;
+    string list[] = {"apple", "banana", "grapes", "date", "ice cream", "Marble", "Zoinks"};
+    int prices[] = {5, 3, 2, 20, 6, 15, 18};
+    Node *root = createNode(list[0], prices[0]);
+    Node *node = NULL;
 
-    string list[] = {"apple", "banana", "grapes", "date", "ice cream"};
-    int prices[] = {3, 2, 20, 6, 15};
-
-    Node *root = createNode("bacon", 5);
+    // Node *root = createNode("bacon", 5);
 
     for (int i = 0; i < len; i++)
     {
-
-        insert(root, createNode(list[i], prices[i]));
+        node = createNode(list[i], prices[i]);
+        printNode(node);
+        // root = insert(root, node);
+        insertVoid(root, node);
+        cout << "-----------------" << endl;
     }
-
+    cout << "\n***********Printing InOrder*************" << endl;
+    Print(root);
     // calculate average
     int sum = 0, count = 0, average = 0;
     calcAverage(root, sum, count);
