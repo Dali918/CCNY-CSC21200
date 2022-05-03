@@ -1,6 +1,9 @@
 #include <iostream>
+#include <random>
+#include <vector>
 #include <string>
 using namespace std;
+
 /*Write a program that creates a singly link list of used automobiles containing Cars that
 describe the model name (string), price(int) and owner’s name. The program should create a
 list containing 12 Cars created by the user. There are only three types of models (BMW,
@@ -15,84 +18,21 @@ $500 buckets
 • Print a printout of all cars contained in the updated list (model, price,
 owner)*/
 
-struct Car
+struct Node
 {
-    string m_model, m_owner;
+    Node *next = NULL;
+    string m_model;
+    string m_owner;
     int m_price;
 };
+
 // Car Class Operator Overload Definitions
-ostream &operator<<(ostream &out, const Car &car)
+ostream &operator<<(ostream &out, Node *car)
 {
-    out << "Car Model: " << car.m_model << endl;
-    out << "Car Owner: " << car.m_owner << endl;
-    out << "Car Price: $" << car.m_price << endl;
-    return out;
-}
-
-// Node wrapper class
-class Node
-{
-private:
-    int nodeID;
-    Car car;
-    Node *next_ptr;
-
-public:
-    // constructors
-    Node(int id = 0) : next_ptr(nullptr), nodeID(id), car{"none", "none", 0} {} // default constructor
-    Node(int id, string model = "none", string owner = "none", int price = 0) : nodeID(id), car{model, owner, price} {}
-    Node(const Car &car);   // constructor with car argument
-    Node(const Node &node); // constructor with node argument
-    ~Node();                // destructor
-    // getters
-    Node *getNext() const { return next_ptr; }
-    int getNodeID() const { return nodeID; }
-    Car getCar() const { return car; }
-    // setters
-    void setNext(Node *next) { this->next_ptr = next; }
-    void setNodeID(int id) { this->nodeID = id; }
-    void setCar(const Car &car) { this->car = car; }
-    // overloaded operators
-    friend ostream &operator<<(ostream &out, const Node &node);
-    Node &operator=(const Node &node);
-    // print member car
-    inline void printCar() { cout << this->car; }
-    friend class LinkedList;
-};
-
-Node::Node(const Node &node)
-{
-    Node();
-    this->car = node.car;
-}
-
-Node::Node(const Car &car)
-{
-    Node();
-    this->car = car;
-}
-
-Node::~Node()
-{
-    cout << "Node " << nodeID << " ";
-}
-// Node class Operator Overload Definitions
-Node &Node::operator=(const Node &node)
-{
-    if (this != &node)
-    {
-        delete this->next_ptr; // d
-        this->next_ptr = nullptr;
-        this->nodeID = node.nodeID;
-        this->car = node.car;
-    }
-    return *this;
-}
-
-ostream &operator<<(ostream &out, const Node &node)
-{
-    out << "Node ID - " << node.nodeID << endl;
-    out << node.car << endl;
+    out << "Car Model: " << car->m_model;
+    out << " | Car Owner: " << car->m_owner;
+    out << " | Car Price: $" << car->m_price << endl;
+    cout << "------------------------------------------" << endl;
     return out;
 }
 
@@ -105,83 +45,130 @@ private:
 
 public:
     LinkedList() : head(NULL), l_size(0) {} // default constructor
+    LinkedList(LinkedList &list);
     // LinkedList(const LinkedList &list);
-    LinkedList(Node &node);
+    LinkedList(Node *node);
     ~LinkedList();
     void setHead(Node *node) { this->head = node; }
     Node *getHead() { return this->head; }
+    int getSize() { return this->l_size; }
     // public methods
-    void insertFirst(Node &node);
-    void traverse();
+    void insertFirst(Node *node);
+    void removeNode(Node *node);
+    void PrintList();
 };
 
-LinkedList::LinkedList(Node &node)
+LinkedList::LinkedList(Node *node)
 {
-    LinkedList();
-    l_size++;
-    node.nodeID = l_size;
-    this->head = &node;
+    node->next = NULL;
+    this->head = node;
+    l_size = 1;
+}
+LinkedList::LinkedList(LinkedList &list)
+{
+    if (this != &list && list.getHead() != NULL) // make sure list is not empty
+    {
+        // shallow copy but make next == NULL
+        this->head = new Node;
+        this->head = list.getHead();
+        this->head->next = NULL;
+
+        Node *curr_this = this->head;      // start current this at head
+        Node *curr_list = list.head->next; // start current list at head
+
+        while (curr_list != NULL)
+        {
+            curr_this->next = new Node; // make new node and add it to this list for copy
+            curr_this = curr_this->next;
+            // deep copy values
+            curr_this->m_model = curr_list->m_model;
+            curr_this->m_owner = curr_list->m_owner;
+            curr_this->m_price = curr_list->m_price;
+            // copy the next
+            curr_list = curr_list->next;
+        }
+    }
 }
 
-void LinkedList::insertFirst(Node &node)
+void LinkedList::insertFirst(Node *node)
 {
-    node.setNodeID(++l_size);
-    node.setNext(this->head);
-    this->head = &node;
+    node->next = this->head;
+    this->head = node;
+    l_size++;
+}
+
+void LinkedList::removeNode(Node *node)
+{
+    Node *curr = this->head;
+    Node *prev = this->head;
+    while (curr != NULL)
+    {
+        if (curr == node)
+        {
+            (curr == this->head) ? (head = curr->next) : prev->next = curr->next; // Reassign accordingly
+            delete curr;
+            l_size--;
+            break;
+        }
+
+        prev = curr; // Check next node
+        curr = curr->next;
+    }
+}
+
+void LinkedList::PrintList()
+{
+    Node *curr = this->head;
+
+    cout << "Linked List Size: " << this->l_size << endl;
+    while (curr != NULL)
+    {
+        cout << curr;
+        curr = curr->next;
+    }
+    cout << "************************************" << endl;
 }
 
 LinkedList::~LinkedList()
 {
-    Node *current = this->head;
-    Node *next = current->next_ptr;
-    while (current != NULL)
+
+    while (this->head != NULL)
     {
-        delete current;
-        current = next;
-        next = (next != NULL) ? next->next_ptr : NULL;
-        cout << "Deleting node" << endl;
+        removeNode(this->head);
     }
 
     cout << "DONE DELETING LINKED LIST" << endl;
 }
 
-void LinkedList::traverse()
-{
-    Node *current = this->head;
-    while (current != NULL)
-    {
-        cout << *current << endl;
-        current = current->next_ptr;
-    }
-}
-
 // Calculate the average price of the cars contained in the list
 int calcAverage(LinkedList &list)
 {
-    int count = 0, sum = 0;
-    Node *current = list.getHead();
-    while (current != NULL)
+    int sum = 0;
+    Node *curr = list.getHead();
+    while (curr != NULL)
     {
-        sum += current->getCar().m_price; // add car price to sum
-        count++;
-        current = current->getNext(); // go to next node in list
+        sum += curr->m_price; // add car price to sum
+        curr = curr->next;    // go to next node in list
     }
 
-    return sum / count;
+    return sum / list.getSize(); // return average
 }
 
 // Provide the details for all cars more expensive than the average price
 void printAboveAverage(LinkedList &list)
 {
-    int average = calcAverage(list), price; // get average
-    Node *current = list.getHead();
-    while (current != NULL)
+    int average = calcAverage(list); // get average
+    Node *curr = list.getHead();     // get head
+
+    cout << "Linked List Size: " << list.getSize() << endl;
+    while (curr != NULL)
     {
-        price = current->getCar().m_price;
-        if (price > average)
-            cout << *current << endl; // print node above average
-        current = current->getNext(); // get next node
+
+        if (curr->m_price > average)
+            cout << curr;  // print node above average
+        curr = curr->next; // go to next node in list
     }
+    cout << "************************************" << endl;
 }
 
 int main()
@@ -196,33 +183,75 @@ int main()
     // cout << "----------------------------------------------" << endl;
     /*****************************************/
     LinkedList list;
-    Car car;
-    Node *current = NULL;
+    Node *node = NULL;
     int len = 2, price, average;
     cout << "Populate linked list" << endl;
     string model, owner;
     for (int i = 0; i < len; i++)
     {
+        node = new Node;
         cout << "Enter the model, owner's name and price of the car ($2500 – $12,500) to the nearest whole number" << endl;
         cout << "Use the format \"model\" __ \"name\" __ \"price\"" << endl;
         cout << "----------------------------------------------" << endl;
         cin >> model >> owner >> price;
+
+        if (price < 2500 || price > 12500)
+        {
+            while (true)
+            {
+                cout << "Enter a Price within the range $2,500 and $12,500" << endl;
+                cin >> price;
+                if (price >= 2500 || price <= 12500)
+                {
+                    break;
+                }
+            }
+        }
+
         cout << "You entered: " << endl;
         cout << "Model: " << model << " Owner: " << owner << " Price: " << price << endl;
         cout << "----------------------------------------------\n"
              << endl;
         // creating node
-        car.m_model = model;
-        car.m_owner = owner;
-        car.m_price = price;
+        node->m_model = model;
+        node->m_owner = owner;
+        node->m_price = price;
         // dynamically allocate memory
-        current = new Node(0, model, owner, price);
-        list.insertFirst(*current);
+        list.insertFirst(node);
     }
 
     cout << endl;
 
-    list.traverse();
+    list.PrintList();
+    // Provide a histogram(global array) of all cars in the list portioned into $500 buckets
+    int bucket_len = 20, step = 500;
+    int upperLimit = 12500, lowerLimit = 2500;
+    LinkedList *HashTable = new LinkedList[bucket_len];
+
+    // for (int i = 0; i < bucket_len; i++)
+    // {
+    //     HashTable[i] = LinkedList();
+    // }
+
+    Node *curr = list.getHead();
+
+    while (curr != NULL)
+    {
+        int index = (curr->m_price - lowerLimit) / step;
+        HashTable[index].insertFirst(curr);
+    }
+
+    for (int i = 0; i < bucket_len; i++)
+    {
+        
+    }
+
+    delete[] HashTable;
+
+    // TODO: For this step you could try using (price - lower limit / step) but still need to account for edge cases
+
+    // LinkedList **LinkedListArray = new LinkedList *[20];
+
     // Calculate the average price of the cars contained in the list
     average = calcAverage(list);
     cout << "The average price is: $" << average << endl;
@@ -231,22 +260,19 @@ int main()
     // Provide the details for all cars more expensive than the average price
     printAboveAverage(list);
     // Remove all Cars having a price less than 25% of average price
-    current = list.getHead();
-    Node *prev = current->getNext();
-    while (current != NULL)
+    cout << "Printing all above 25% of average" << endl;
+    node = list.getHead();
+    while (node != NULL)
     {
-        if (current->getCar().m_price < 0.25 * average)
-        {
+        Node *next = node->next;
+        if (node->m_price < 0.25 * average)
+            list.removeNode(node);
 
-            if (current == list.getHead())
-                list.setHead(current->getNext());
-            else
-                prev->setNext(current->getNext());
-            delete current;
-            current = NULL;
-        }
+        node = next;
     }
-    // Print new list
-    cout << "Updated list (cars over 25% of average)" << endl;
-    list.traverse();
+
+    list.PrintList();
+    // // Print new list
+    // cout << "Updated list (cars over 25% of average)" << endl;
+    // list.traverse();
 }

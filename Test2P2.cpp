@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <iomanip>
 using namespace std;
 
 struct Node // Node Structure
@@ -87,9 +86,9 @@ int computeHash(string phrase) // function to compute hash
 {
     const int key = 13;
     int sum = 0;
-    for (char i : phrase)
+    for (int i = 0; i < phrase.length(); i++)
     {
-        sum += static_cast<int>(i);
+        sum += static_cast<int>(phrase[i]);
     }
 
     return sum % key;
@@ -145,13 +144,20 @@ int main()
 
     const int len = 13;
     vector<string> words = createWords(); // vector with phrases
-    Node **HashTable = new Node *[len]    // Hash Table with linked list pointers set to NULL
-    { NULL };
-    int linkedListCount[len]{0}; // Linked List count array
+
+    // Hash Table with Linked List Pointers set to NULL
+    Node **HashTable = new Node *[len];
+    for (int i = 0; i < len; i++)
+    {
+        HashTable[i] = NULL;
+    }
+
+    int linkedListCount[len] = {0}; // Linked List count array
     int count = 0;
 
-    for (string phrase : words)
+    for (int i = 0; i < words.size(); i++)
     {
+        string phrase = words.at(i);
         // Populate Hash Table
         int index = computeHash(phrase);
         // insert with head@index, phrase, increment linked list size
@@ -167,9 +173,10 @@ int main()
     }
 
     // Test to find phrases
-    string test_bench[6]{"BCDEF", "EFGHI", "Zabcd", "abcde", "vwxyz", "AbCdE"}; // test bench
-    for (string phrase : test_bench)
+    string test_bench[6] = {"BCDEF", "EFGHI", "Zabcd", "abcde", "vwxyz", "AbCdE"}; // test bench
+    for (int i = 0; i < 6; i++)
     {
+        string phrase = test_bench[i];
         int index = computeHash(phrase); // calculate hash
         Node *node = HashTable[index];   // Get linked list head at index
         bool found = false;              // found flag
@@ -179,7 +186,7 @@ int main()
         {
             if (node->data == phrase) // print node details if phrase was found
             {
-                cout << "FOUND"<<endl;
+                cout << "FOUND" << endl;
                 PrintNode(node);
                 found = true;
                 break;
@@ -207,5 +214,5 @@ int main()
     {
         deleteLinkedList(HashTable[i]);
     }
-    delete HashTable; // deallocate hash table from memory
+    delete[] HashTable; // deallocate hash table from memory
 }

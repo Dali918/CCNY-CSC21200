@@ -1,49 +1,3 @@
-/**********************************************
-program: LinkListC.cpp
-author: Y. Solow
-date: July 4, 2016
-synopsis: to program a singly link list using C
-**********************************************/
-
-/*
-We developed in class a LinkedListC.cpp program that creates a working Singly
-Linked List that contains nodes that contain the name of a fruit(string) and how
-many fruits it contains  (int cnt) as well as a pointer to the next node.
-
-Modify this LinkListC.cpp program to act as a Stack container which can stuff
-as many fruits asthe user wants
-
-The created Stack container should provide only  the following functions:
-1) bool Stack_Empty(Stack_ptr) - which informs user if the Stack is empty/full
-2) Stack_ptr Push(Stack_ptr) - which allows to push a new node into the Stack
-   and fills the appropriate fruit name and corresponding count.
-3) StacK_ptr Pop(Stack_ptr) - which removes the most recent node
-4) string Stack_Peak(Stack_ptr) - which returns the fruit name of the top node
-5) The number of nodes in the Stack should be stored in a global variable
-   TotalNodeCnt
-6) void Print(Stack_ptr) function that allows the user to print the fruits in the Stack
-   without popping them.
-
-Demonstrate:
-a) The problem should fill the stack with the following list of fruits with
-   corresponding counts
-    Apple - 10
-    Bananas - 20
-    Cherry - 30
-    Date - 40
-    Endive - 50
-    Fig - 60
-    Guava - 70
-    Herb - 80
-    Iacamolo - 90
-        Java  - 100
-b) Print the entire list of stuffed fruits
-c) Remove 3 fruits and Print the remaining list of fruits
-d) Peak into the Stack and print the corresponding fruit/count
-d) Remove all fruits
-e) Check that the Stack is empty
-*/
-//#define DEBUG
 #include <iostream>
 using namespace std;
 int TotalCnt = 0;
@@ -300,7 +254,7 @@ a) The problem should fill the stack with the following list of fruits with
     //    d) Remove all fruits
     while (Stack_Empty(head) == 0)
     {
-        head = Pop(head);
+        head = Pop(head);   
     }
     // e) Check that the Stack is empty
     cout << "--------Peak After Clearing List------------" << endl;
