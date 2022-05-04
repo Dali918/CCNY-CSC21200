@@ -44,7 +44,7 @@ Node *createNode(string name, int price)
 
 void printNode(Node *node)
 {
-    cout << "Name: " << node->name << ", Price: $" << node->price << ", left: " << node->left << ", right: " << node->right << endl;
+    cout << "Name: " << node->name << ", Price: $" << node->price << ", left->" << node->left << ", right->" << node->right << endl;
 }
 
 Node *insert(Node *root, Node *node)
@@ -75,37 +75,37 @@ Node *insert(Node *root, Node *node)
     return root;
 }
 
-void insertVoid(Node *root, Node *node)
-{
+// void insertVoid(Node *root, Node *node)
+// {
 
-    cout << "Root Price is $" << root->price << " address->" << root;
-    if (node->price <= root->price)
-    {
-        if (root->left == NULL)
-        {
-            cout<<"\nInserting!"<<endl;
-            root->left = node;
-        }
-        else
-        {
-            cout << ", Going left!" << endl;
-            insertVoid(root->left, node);
-        }
-    }
-    else
-    {
-        if (root->right == NULL)
-        {
-            cout<<"\nInserting!"<<endl;
-            root->right = node;
-        }
-        else
-        {
-            cout << ", Going right!" << endl;
-            insertVoid(root->right, node);
-        }
-    }
-}
+//     cout << "Root Price is $" << root->price << " address->" << root;
+//     if (node->price <= root->price)
+//     {
+//         if (root->left == NULL)
+//         {
+//             cout << "\nInserting!" << endl;
+//             root->left = node;
+//         }
+//         else
+//         {
+//             cout << ", Going left!" << endl;
+//             insertVoid(root->left, node);
+//         }
+//     }
+//     else
+//     {
+//         if (root->right == NULL)
+//         {
+//             cout << "\nInserting!" << endl;
+//             root->right = node;
+//         }
+//         else
+//         {
+//             cout << ", Going right!" << endl;
+//             insertVoid(root->right, node);
+//         }
+//     }
+// }
 
 void calcAverage(Node *root, int &sum, int &count)
 {
@@ -131,43 +131,73 @@ void Print(Node *root)
 
 void PrintL(Node *root)
 {
-    if (root != NULL && (root->name[0] >= 'L'))
+    if (root != NULL)
     {
-        cout << "Name: " << root->name << " Price: $" << root->price << endl;
         PrintL(root->left);
+        if (root->name[0] >= 'L')
+        {
+            printNode(root);
+        }
         PrintL(root->right);
     }
 }
 
 int main()
 {
-    int len = 6;
-    string list[] = {"apple", "banana", "grapes", "date", "ice cream", "Marble", "Zoinks"};
-    int prices[] = {5, 3, 2, 20, 6, 15, 18};
-    Node *root = createNode(list[0], prices[0]);
+    const int len = 15;
+    string list[] = {"Apple", "Banana", "Grapes", "Dates", "Ice cream", "Marbles", "Zoinks", "Lemon",
+                     "RubberBands", "Shoes", "Tomatoes", "Onions",
+                     "GroundBeef", "OatMeal", "Salsa"};
+    int prices[] = {5, 3, 2, 20, 6, 15, 18, 24, 10, 4, 60, 13, 23, 17, 50};
+    // Node *root = createNode(list[0], prices[0]);
+    Node *root = NULL;
     Node *node = NULL;
 
     // Node *root = createNode("bacon", 5);
+    cout << "CURRENT TEST BENCH" << endl;
+    cout << "{ ";
+    for (int i = 0; i < len; i++)
+    {
+        cout << "Item: " << list[i] << ", Price: $" << prices[i] << endl;
+    }
+    cout << "} " << endl;
+    cout << "***********************\n"
+         << endl;
 
+    // Populate Tree
     for (int i = 0; i < len; i++)
     {
         node = createNode(list[i], prices[i]);
         printNode(node);
-        // root = insert(root, node);
-        insertVoid(root, node);
+        root = insert(root, node);
+        // insertVoid(root, node);
         cout << "-----------------" << endl;
     }
+
+    // Manually Populate tree
+    // int price;
+    // string item;
+    // for (int i = 0; i < len; i++)
+    // {
+    //     cout << "Enter Item and Price in the format: \"Item __ Price\"" << endl;
+    //     cin >> item >> price;
+    //     cout << "You Entered: Item = " << item << " Price = " << price << endl;
+    //     cout << "----------------------------------" << endl;
+    //     node = createNode(item, price);
+    //     root = insert(root, node);
+    // }
+
     cout << "\n***********Printing InOrder*************" << endl;
     Print(root);
+
     // calculate average
     int sum = 0, count = 0, average = 0;
     calcAverage(root, sum, count);
     average = sum / count;
-    cout << "Calculate Average is: $" << average << endl;
-    cout << "-------------Printing The Tree-------------" << endl;
-    Print(root);
-    cout << "***********************" << endl;
-    cout << "-------------Printing Items with letter greate than 'L'-------------" << endl;
+    cout << "\n***********************" << endl;
+    cout << "Calculated Average is: $" << average << endl;
+    cout << "*************************" << endl;
+    cout << "\n-------------Printing Items with First letter greater than 'L'-------------" << endl;
     PrintL(root);
     cout << "***********************" << endl;
 
