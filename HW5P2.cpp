@@ -44,7 +44,8 @@ Node *createNode(string name, int price)
 
 void printNode(Node *node)
 {
-    cout << "Name: " << node->name << ", Price: $" << node->price << ", left->" << node->left << ", right->" << node->right << endl;
+    cout << "Name: " << node->name << ", Price: $" << node->price << ", left-> " << node->left << ", right-> " << node->right << endl;
+    cout<<"---------------------------"<<endl;
 }
 
 Node *insert(Node *root, Node *node)
@@ -57,7 +58,7 @@ Node *insert(Node *root, Node *node)
     else
     {
 
-        cout << "Root Price is $" << root->price << " address->" << root;
+        cout << "Root Price is $" << root->price;
         if (node->price <= root->price)
         {
 
