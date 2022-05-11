@@ -171,6 +171,23 @@ void printAboveAverage(LinkedList &list)
     cout << "************************************" << endl;
 }
 
+int getIndex(int number, int step, int upper, int lower, int len)
+{
+    int index = 0;
+
+    while (index < len)
+    {
+        if (number < index * step + lower)
+        {
+            return index;
+        }
+
+        index++;
+    }
+
+    return -1;
+}
+
 int main()
 {
     // string Name;
@@ -184,9 +201,16 @@ int main()
     /*****************************************/
     LinkedList list;
     Node *node = NULL;
-    int len = 2, price, average;
+    int step = 500;
+    int upperLimit = 12500;
+    int lowerLimit = 2500;
+    int len = 2;
     cout << "Populate linked list" << endl;
     string model, owner;
+    int price, average;
+
+    string names[]={"Mambo", "Jambo", "Hambo"};
+    string cars[]={"BMW", "Toyoya","Lexus"};
     for (int i = 0; i < len; i++)
     {
         node = new Node;
@@ -224,27 +248,28 @@ int main()
 
     list.PrintList();
     // Provide a histogram(global array) of all cars in the list portioned into $500 buckets
-    int bucket_len = 20, step = 500;
-    int upperLimit = 12500, lowerLimit = 2500;
-    LinkedList *HashTable = new LinkedList[bucket_len];
+    cout << "\n**********MAKING HISTOGRAM *******" << endl;
+    LinkedList *HashTable = new LinkedList[len];
 
-    // for (int i = 0; i < bucket_len; i++)
-    // {
-    //     HashTable[i] = LinkedList();
-    // }
 
-    Node *curr = list.getHead();
+    node = list.getHead();
 
-    while (curr != NULL)
+    while (node != NULL)
     {
-        int index = (curr->m_price - lowerLimit) / step;
-        HashTable[index].insertFirst(curr);
+        int index = getIndex(node->m_price, step, upperLimit, lowerLimit, 21);
+        index = (index == -1) ? 0 : index;
+        HashTable[index].insertFirst(node);
+        node = node->next;
     }
 
-    for (int i = 0; i < bucket_len; i++)
+    int limit = lowerLimit;
+    for (int i = 0; i < len; i++)
     {
-        
+        cout << "Cars less than: " << limit << endl;
+        HashTable[i].PrintList();
+        cout << "-------------------" << endl;
     }
+    cout << endl;
 
     delete[] HashTable;
 
