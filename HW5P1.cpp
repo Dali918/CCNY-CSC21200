@@ -26,6 +26,29 @@ struct Node
     int m_price;
 };
 
+Node *copyNode(Node *node)
+{
+    Node *newNode = new Node;
+    newNode->m_model = node->m_model;
+    newNode->m_owner = node->m_owner;
+    newNode->m_price = node->m_price;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void print(Node *node)
+{
+}
+
+Node *insertFirst(Node *head, Node *node) // function that inserts at beginning of linked list
+{
+
+    // reassign head
+    node->next = head;
+    head = node;
+    return head;
+}
+
 // Car Class Operator Overload Definitions
 ostream &operator<<(ostream &out, Node *car)
 {
@@ -171,7 +194,7 @@ void printAboveAverage(LinkedList &list)
     cout << "************************************" << endl;
 }
 
-int getIndex(int number, int step, int upper, int lower, int len)
+int getIndex(int number, int step, int lower, int len)
 {
     int index = 0;
 
@@ -203,15 +226,16 @@ int main()
     Node *node = NULL;
     int step = 500;
     int upperLimit = 12500;
-    int lowerLimit = 2500;
-    int len = 2;
+    int lowerLimit = 3000;
+    int len = 20;
+    int inputLen=2;
     cout << "Populate linked list" << endl;
     string model, owner;
     int price, average;
 
-    string names[]={"Mambo", "Jambo", "Hambo"};
-    string cars[]={"BMW", "Toyoya","Lexus"};
-    for (int i = 0; i < len; i++)
+    string names[] = {"Mambo", "Jambo", "Hambo"};
+    string cars[] = {"BMW", "Toyoya", "Lexus"};
+    for (int i = 0; i < inputLen; i++)
     {
         node = new Node;
         cout << "Enter the model, owner's name and price of the car ($2500 – $12,500) to the nearest whole number" << endl;
@@ -249,25 +273,38 @@ int main()
     list.PrintList();
     // Provide a histogram(global array) of all cars in the list portioned into $500 buckets
     cout << "\n**********MAKING HISTOGRAM *******" << endl;
-    LinkedList *HashTable = new LinkedList[len];
-
-
-    node = list.getHead();
-
-    while (node != NULL)
+    Node **HashTable = new Node *[len];
+    for (int i = 0; i < len; i++)
     {
-        int index = getIndex(node->m_price, step, upperLimit, lowerLimit, 21);
-        index = (index == -1) ? 0 : index;
-        HashTable[index].insertFirst(node);
-        node = node->next;
+        HashTable[i] = NULL;
+    }
+
+    Node *head = list.getHead();
+
+    while (head != NULL)
+    {
+        int index = getIndex(head->m_price, step, lowerLimit, 21);
+        if (index != -1)
+        {
+            node = copyNode(head);
+            HashTable[index] = insertFirst(HashTable[index], node);
+        }
+
+        head = head->next;
     }
 
     int limit = lowerLimit;
     for (int i = 0; i < len; i++)
     {
         cout << "Cars less than: " << limit << endl;
-        HashTable[i].PrintList();
+        node = HashTable[i];
+        while (node != NULL)
+        {
+            cout << "Model: " << node->m_model << " Owner: " << node->m_owner << " Price: " << node->m_price << endl;
+            node = node->next;
+        }
         cout << "-------------------" << endl;
+        limit+=step;
     }
     cout << endl;
 
@@ -285,12 +322,12 @@ int main()
     // Provide the details for all cars more expensive than the average price
     printAboveAverage(list);
     // Remove all Cars having a price less than 25% of average price
-    cout << "Printing all above 25% of average" << endl;
+    cout << "Printing all above 25% of average (" <<average*0.25<<")"<< endl;
     node = list.getHead();
     while (node != NULL)
     {
         Node *next = node->next;
-        if (node->m_price < 0.25 * average)
+        if (node->m_price > 0.25 * average)
             list.removeNode(node);
 
         node = next;
