@@ -1,6 +1,5 @@
 #include <iostream>
-#include <random>
-#include <vector>
+#include <limits>
 #include <string>
 using namespace std;
 
@@ -34,10 +33,6 @@ Node *copyNode(Node *node)
     newNode->m_price = node->m_price;
     newNode->next = NULL;
     return newNode;
-}
-
-void print(Node *node)
-{
 }
 
 Node *insertFirst(Node *head, Node *node) // function that inserts at beginning of linked list
@@ -182,11 +177,8 @@ void printAboveAverage(LinkedList &list)
 {
     int average = calcAverage(list); // get average
     Node *curr = list.getHead();     // get head
-
-    cout << "Linked List Size: " << list.getSize() << endl;
     while (curr != NULL)
     {
-
         if (curr->m_price > average)
             cout << curr;  // print node above average
         curr = curr->next; // go to next node in list
@@ -194,21 +186,23 @@ void printAboveAverage(LinkedList &list)
     cout << "************************************" << endl;
 }
 
+// Get index function for creating car buckets
 int getIndex(int number, int step, int lower, int len)
 {
+    // start at index =0;
     int index = 0;
 
-    while (index < len)
+    while (index < len) // stop when the index is greateer than the size of array
     {
-        if (number < index * step + lower)
+        if (number <= index * step + lower)
         {
-            return index;
+            return index; // return index if the price is less than the limit (in step = $500 increments)
         }
 
         index++;
     }
 
-    return -1;
+    return -1; // return negative 1 if an appropraite index is not found
 }
 
 int main()
@@ -224,117 +218,124 @@ int main()
     /*****************************************/
     LinkedList list;
     Node *node = NULL;
-    int step = 500;
-    int upperLimit = 12500;
-    int lowerLimit = 3000;
-    int len = 20;
-    int inputLen=2;
-    cout << "Populate linked list" << endl;
+    const int step = 500;
+    const int upperLimit = 12500;
+    const int lowerLimit = 2500;
+    const int len = 20;
+    const int inputLen = 4;
     string model, owner;
     int price, average;
 
-    string names[] = {"Mambo", "Jambo", "Hambo"};
-    string cars[] = {"BMW", "Toyoya", "Lexus"};
     for (int i = 0; i < inputLen; i++)
     {
-        node = new Node;
-        cout << "Enter the model, owner's name and price of the car ($2500 – $12,500) to the nearest whole number" << endl;
-        cout << "Use the format \"model\" __ \"name\" __ \"price\"" << endl;
-        cout << "----------------------------------------------" << endl;
+
+        cout << "Enter: Car Model, Owner Name, and Car Price($2500 to $12,500)" << endl;
+        cout << "Use the format: \"Model\" __ \"Name\" __ \"Price\"" << endl;
         cin >> model >> owner >> price;
 
-        if (price < 2500 || price > 12500)
+        do
         {
-            while (true)
+
+            try
+            {
+                if (price < lowerLimit || price > upperLimit || cin.fail())
+                {
+                    throw -1;
+                }
+
+                break;
+            }
+            catch (int x)
             {
                 cout << "Enter a Price within the range $2,500 and $12,500" << endl;
+                cin.clear();
+                cin.ignore(std::numeric_limits<streamsize>::max(), '\n');
                 cin >> price;
-                if (price >= 2500 || price <= 12500)
-                {
-                    break;
-                }
             }
-        }
+
+        } while (true);
+
+        // while (price < 2500 || price > 12500) // Check for Appropriate Price Range
+        // {
+        // }
 
         cout << "You entered: " << endl;
         cout << "Model: " << model << " Owner: " << owner << " Price: " << price << endl;
         cout << "----------------------------------------------\n"
              << endl;
-        // creating node
+
+        node = new Node; // create node
         node->m_model = model;
         node->m_owner = owner;
         node->m_price = price;
-        // dynamically allocate memory
-        list.insertFirst(node);
+        list.insertFirst(node); // add to list
     }
 
-    cout << endl;
+    cout <<"\n*********************PRINTING LINKED LIST********************\n";
 
     list.PrintList();
     // Provide a histogram(global array) of all cars in the list portioned into $500 buckets
     cout << "\n**********MAKING HISTOGRAM *******" << endl;
+    // Make Empty Hash Table
     Node **HashTable = new Node *[len];
     for (int i = 0; i < len; i++)
     {
         HashTable[i] = NULL;
     }
 
-    Node *head = list.getHead();
 
+    Node *head = list.getHead();        //get head
     while (head != NULL)
     {
-        int index = getIndex(head->m_price, step, lowerLimit, 21);
-        if (index != -1)
+        int index = getIndex(head->m_price, step, lowerLimit + step, 21);       //get index
+        if (index != -1)        //check if index invalid
         {
-            node = copyNode(head);
-            HashTable[index] = insertFirst(HashTable[index], node);
+            node = copyNode(head);      //make node copy
+            HashTable[index] = insertFirst(HashTable[index], node);     //insert copy in hash table
         }
 
-        head = head->next;
+        head = head->next;      //go to next node
     }
 
-    int limit = lowerLimit;
+    //Print Buckets
+    int limit = lowerLimit + step;      //first range upper bound is $3000
     for (int i = 0; i < len; i++)
     {
-        cout << "Cars less than: " << limit << endl;
         node = HashTable[i];
-        while (node != NULL)
+        if (node != NULL)       //only print bucket if not empty
         {
-            cout << "Model: " << node->m_model << " Owner: " << node->m_owner << " Price: " << node->m_price << endl;
-            node = node->next;
+            cout << "Cars in Range: $" << limit - step + 1 << " to $" << limit << endl;
+            while (node != NULL)
+            {
+                cout << node;
+                node = node->next;
+            }
         }
-        cout << "-------------------" << endl;
-        limit+=step;
+        limit += step;
     }
     cout << endl;
 
     delete[] HashTable;
 
-    // TODO: For this step you could try using (price - lower limit / step) but still need to account for edge cases
-
-    // LinkedList **LinkedListArray = new LinkedList *[20];
-
     // Calculate the average price of the cars contained in the list
     average = calcAverage(list);
-    cout << "The average price is: $" << average << endl;
+    cout << "AVERAGE PRICE: $" << average << endl;
     cout << endl;
-    cout << "The following are above average: " << endl;
+    cout << "***PRINTING ABOVE AVERAGE:*****" << endl;
     // Provide the details for all cars more expensive than the average price
     printAboveAverage(list);
     // Remove all Cars having a price less than 25% of average price
-    cout << "Printing all above 25% of average (" <<average*0.25<<")"<< endl;
+    int threshold = average * 0.25;
+    cout << "****UPDATED LIST - REMOVED CARS BELOW 25% of average ($" << threshold << ")" << endl;
     node = list.getHead();
     while (node != NULL)
     {
         Node *next = node->next;
-        if (node->m_price > 0.25 * average)
+        if (node->m_price < threshold)
             list.removeNode(node);
 
         node = next;
     }
 
     list.PrintList();
-    // // Print new list
-    // cout << "Updated list (cars over 25% of average)" << endl;
-    // list.traverse();
 }
