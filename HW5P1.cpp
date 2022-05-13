@@ -47,8 +47,8 @@ Node *insertFirst(Node *head, Node *node) // function that inserts at beginning 
 // Car Class Operator Overload Definitions
 ostream &operator<<(ostream &out, Node *car)
 {
-    out << "Car Model: " << car->m_model;
-    out << " | Car Owner: " << car->m_owner;
+    out << "Car Owner: " << car->m_owner;
+    out << " | Car Model: " << car->m_model;
     out << " | Car Price: $" << car->m_price << endl;
     cout << "------------------------------------------" << endl;
     return out;
@@ -187,12 +187,12 @@ void printAboveAverage(LinkedList &list)
 }
 
 // Get index function for creating car buckets
-int getIndex(int number, int step, int lower, int len)
+int getIndex(int number, int step, int lower, int bucketLen)
 {
     // start at index =0;
     int index = 0;
 
-    while (index < len) // stop when the index is greateer than the size of array
+    while (index < bucketLen) // stop when the index is greateer than the size of array
     {
         if (number <= index * step + lower)
         {
@@ -207,31 +207,31 @@ int getIndex(int number, int step, int lower, int len)
 
 int main()
 {
-    // string Name;
-    // /*****************************************/
-    // cout << "Student Enter Name" << endl;
-    // cin >> Name;
-    // cout << "---------  -------------------------------------" << endl;
-    // cout << "FIle: " << __FILE__ << " Date: " << __DATE__ << endl;
-    // cout << "Student Name: " << Name << endl;
-    // cout << "----------------------------------------------" << endl;
+    string Name;
+    /*****************************************/
+    cout << "Student Enter Name" << endl;
+    cin >> Name;
+    cout << "---------  -------------------------------------" << endl;
+    cout << "FIle: " << __FILE__ << " Date: " << __DATE__ << endl;
+    cout << "Student Name: " << Name << endl;
+    cout << "----------------------------------------------" << endl;
     /*****************************************/
     LinkedList list;
     Node *node = NULL;
     const int step = 500;
     const int upperLimit = 12500;
     const int lowerLimit = 2500;
-    const int len = 20;
-    const int inputLen = 4;
+    const int bucketLen = 20;
+    const int inputLen = 3;
     string model, owner;
     int price, average;
 
     for (int i = 0; i < inputLen; i++)
     {
 
-        cout << "Enter: Car Model, Owner Name, and Car Price($2500 to $12,500)" << endl;
-        cout << "Use the format: \"Model\" __ \"Name\" __ \"Price\"" << endl;
-        cin >> model >> owner >> price;
+        cout << "Enter: Owner, Car Model, and Car Price($2500 to $12,500)" << endl;
+        cout << "Use the format: \"Owner\" __ \"Model\" __ \"Price\"" << endl;
+        cin >> owner >> model >> price;
 
         do
         {
@@ -260,7 +260,7 @@ int main()
         // }
 
         cout << "You entered: " << endl;
-        cout << "Model: " << model << " Owner: " << owner << " Price: " << price << endl;
+        cout << "Owner: " << owner << " Model: " << model << " Price: " << price << endl;
         cout << "----------------------------------------------\n"
              << endl;
 
@@ -271,38 +271,37 @@ int main()
         list.insertFirst(node); // add to list
     }
 
-    cout <<"\n*********************PRINTING LINKED LIST********************\n";
+    cout << "\n*********************PRINTING LINKED LIST********************\n";
 
     list.PrintList();
     // Provide a histogram(global array) of all cars in the list portioned into $500 buckets
     cout << "\n**********MAKING HISTOGRAM *******" << endl;
     // Make Empty Hash Table
-    Node **HashTable = new Node *[len];
-    for (int i = 0; i < len; i++)
+    Node **HashTable = new Node *[bucketLen];
+    for (int i = 0; i < bucketLen; i++)
     {
         HashTable[i] = NULL;
     }
 
-
-    Node *head = list.getHead();        //get head
+    Node *head = list.getHead(); // get head
     while (head != NULL)
     {
-        int index = getIndex(head->m_price, step, lowerLimit + step, 21);       //get index
-        if (index != -1)        //check if index invalid
+        int index = getIndex(head->m_price, step, lowerLimit + step, 21); // get index
+        if (index != -1)                                                  // check if index invalid
         {
-            node = copyNode(head);      //make node copy
-            HashTable[index] = insertFirst(HashTable[index], node);     //insert copy in hash table
+            node = copyNode(head);                                  // make node copy
+            HashTable[index] = insertFirst(HashTable[index], node); // insert copy in hash table
         }
 
-        head = head->next;      //go to next node
+        head = head->next; // go to next node
     }
 
-    //Print Buckets
-    int limit = lowerLimit + step;      //first range upper bound is $3000
-    for (int i = 0; i < len; i++)
+    // Print Buckets
+    int limit = lowerLimit + step; // first range upper bound is $3000
+    for (int i = 0; i < bucketLen; i++)
     {
         node = HashTable[i];
-        if (node != NULL)       //only print bucket if not empty
+        if (node != NULL) // only print bucket if not empty
         {
             cout << "Cars in Range: $" << limit - step + 1 << " to $" << limit << endl;
             while (node != NULL)
