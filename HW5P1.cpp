@@ -222,7 +222,7 @@ int main()
     const int upperLimit = 12500;
     const int lowerLimit = 2500;
     const int bucketLen = 20;
-    const int inputLen = 3;
+    const int inputLen = 12;
     string model, owner;
     int price, average;
 

@@ -45,12 +45,12 @@ Node *createNode(string name, int price)
 void printNode(Node *node)
 {
     cout << "Name: " << node->name << ", Price: $" << node->price << ", left-> " << node->left << ", right-> " << node->right << endl;
-    cout<<"---------------------------"<<endl;
+    cout << "---------------------------" << endl;
 }
 
 Node *insert(Node *root, Node *node)
 {
-    if (root == NULL)
+    if (root == NULL) // check if node is empty
     {
         cout << "Inserting!" << endl;
         root = node;
@@ -59,6 +59,7 @@ Node *insert(Node *root, Node *node)
     {
 
         cout << "Root Price is $" << root->price;
+        // insert left is price is less and left is empty
         if (node->price <= root->price)
         {
 
@@ -67,6 +68,7 @@ Node *insert(Node *root, Node *node)
         }
         else
         {
+            // insert right if price is higher and right is empty
             cout << ", Going right!" << endl;
             root->right;
             root->right = insert(root->right, node);
@@ -111,7 +113,7 @@ Node *insert(Node *root, Node *node)
 void calcAverage(Node *root, int &sum, int &count)
 {
 
-    if (root != NULL)
+    if (root != NULL) // calculare average in order
     {
         count++;
         sum += root->price;
@@ -145,6 +147,16 @@ void PrintL(Node *root)
 
 int main()
 {
+    string Name;
+    /*****************************************/
+    cout << "Student Enter Name" << endl;
+    cin >> Name;
+    cout << "---------  -------------------------------------" << endl;
+    cout << "FIle: " << __FILE__ << " Date: " << __DATE__ << endl;
+    cout << "Student Name: " << Name << endl;
+    cout << "----------------------------------------------" << endl;
+    /*****************************************/
+    
     const int len = 15;
     string list[] = {"Apple", "Banana", "Grapes", "Dates", "Ice cream", "Marbles", "Zoinks", "Lemon",
                      "RubberBands", "Shoes", "Tomatoes", "Onions",
@@ -174,19 +186,6 @@ int main()
         // insertVoid(root, node);
         cout << "-----------------" << endl;
     }
-
-    // Manually Populate tree
-    // int price;
-    // string item;
-    // for (int i = 0; i < len; i++)
-    // {
-    //     cout << "Enter Item and Price in the format: \"Item __ Price\"" << endl;
-    //     cin >> item >> price;
-    //     cout << "You Entered: Item = " << item << " Price = " << price << endl;
-    //     cout << "----------------------------------" << endl;
-    //     node = createNode(item, price);
-    //     root = insert(root, node);
-    // }
 
     cout << "\n***********Printing InOrder*************" << endl;
     Print(root);
