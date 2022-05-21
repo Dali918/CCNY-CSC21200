@@ -17,19 +17,19 @@ int main()
     cout << "Student Name: " << Name << endl;
     cout << "----------------------------------------------" << endl;
     /*****************************************/
-    
+
     ifstream stream{"Hemingway.txt"};
     string line;
     char *heap_line = NULL;
     vector<char *> c_string_array;
-    int line_count = 0;
+    int count = 0;
     if (!stream)
     {
         cout << "Could not open file" << endl;
         return -1;
     }
 
-    while (!stream.eof() && line_count++ <= 40)
+    while (!stream.eof() && count++ <= 40)
     {
         getline(stream, line);
         if (!stream.fail())
@@ -52,7 +52,7 @@ int main()
         }
     }
 
-    int count = 1;
+    count = 1;
     for (vector<char *>::iterator iter = c_string_array.begin(); iter != c_string_array.end(); iter++)
     {
 
@@ -111,6 +111,7 @@ int main()
     cout << "Total Number of Unique Words: " << map_count << endl; // print total number of unique words
 
     const int len = 8;
+    count = 0;
     cout << "\n***********WORDS WITH LENGTH LESS THAN LEN = 8*************" << endl;
     for (map<string, int>::iterator iter = word_map.begin(); iter != word_map.end(); iter++)
     {
@@ -118,8 +119,11 @@ int main()
         {
             cout << "\"" << iter->first << "\", length: " << iter->second << endl;
             cout << "------------" << endl;
+            count++;
         }
     }
+
+    cout << "Total Number of Words with length less than 8: " << count << endl; // print total number of words in text file
 
     for (vector<char *>::iterator iter = c_string_array.begin(); iter != c_string_array.end(); iter++)
     {
