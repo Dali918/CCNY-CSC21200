@@ -25,7 +25,6 @@ public:
     bool isEmpty() { return (this->row_size == 0) && (this->column_size == 0); }
 
 private:
-    string stackUnderflow = "exception: stack is empty!";
     vector<T *> rows;
     int row_size, column_size;
 };
@@ -131,6 +130,20 @@ template <typename T>
 ostream &operator<<(ostream &out, Matrix<T> &matrix)
 {
 
+    int row = matrix.getRowSize();
+    int column = matrix.getColSize();
+    cout << "***** Printing (" << row << "X" << column << ") Matrix *********" << endl;
+    for (int i = 0; i < row; i++)
+    {
+        for (int j = 0; j < column; j++)
+        {
+            cout << matrix(i, j) << " ";
+        }
+
+        cout << endl;
+    }
+
+    cout << "-------------------------" << endl;
     return out;
 }
 int main()
