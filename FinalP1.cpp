@@ -3,6 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include <map>
+#include <sstream>
 using namespace std;
 
 int main()
@@ -75,6 +76,56 @@ int main()
 
     // cout << "Line count is: " << line_count << endl;
     stream.close();
+
+    cout << "\n*****************" << endl;
+    // stringstream string_stream;
+    map<string, int> word_map;
+
+    int word_count = 0;
+    for (vector<char *>::iterator iter = c_string_array.begin(); iter != c_string_array.end(); iter++)
+    {
+        stringstream string_stream;
+        string sample(*iter), word("");
+        size_t pos = sample.find(" ");
+
+        string_stream << sample;
+        while (string_stream >> word)
+        {
+            if ((word.at(word.length() - 1) == '.') || (word.at(word.length() - 1) == ','))
+            {
+                word.erase(word.length() - 1, 1);
+            }
+            word_count++;
+            word_map[word] = word.length();
+        }
+    }
+
+    cout << "\n***********UNIQUE WORDS AND TOTAL NUMBER OF WORDS************" << endl;
+    int map_count = 0;
+    for (map<string, int>::iterator iter = word_map.begin(); iter != word_map.end(); iter++)
+    {
+        cout << "\"" << iter->first << "\", length: " << iter->second << endl;
+        cout << "------------" << endl;
+        map_count++;
+    }
+    cout << "Total Number of Words: " << word_count << endl;
+    cout << "Total Number of Unique Words: " << map_count << endl;
+
+    const int len = 8;
+    cout << "\n***********WORDS WITH LENGTH LESS THAN 8************" << endl;
+    for (map<string, int>::iterator iter = word_map.begin(); iter != word_map.end(); iter++)
+    {
+        if (iter->first.length() < len)
+        {
+            cout << "\"" << iter->first << "\", length: " << iter->second << endl;
+            cout << "------------" << endl;
+        }
+    }
+
+    for (vector<char *>::iterator iter = c_string_array.begin(); iter != c_string_array.end(); iter++)
+    {
+        delete *iter;
+    }
 
     return 0;
 }
