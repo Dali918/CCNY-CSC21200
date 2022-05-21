@@ -19,6 +19,7 @@ public:
     // destructor
     ~Matrix();
     void operator=(const Matrix<T> &matrix);
+    T &operator()(int row, int col);
     int getRowSize() { return this->row_size; }
     int getColSize() { return this->column_size; }
     bool isEmpty() { return (this->row_size == 0) && (this->column_size == 0); }
@@ -83,10 +84,16 @@ void Matrix<T>::operator=(const Matrix<T> &matrix)
         {
             for (int j = 0; j < this->column_size; j++)
             {
-                rows.at(i)[j] = matrix.rows.at(i)[j]; // copy contents
+                this->rows.at(i)[j] = matrix.rows.at(i)[j]; // copy contents
             }
         }
     }
+}
+
+template <typename T>
+T &Matrix<T>::operator()(int row, int col)
+{
+    return this->rows.at(row)[col]; // overloaded elemet access operator
 }
 
 template <typename T>
@@ -94,21 +101,38 @@ Matrix<T> &operator+(Matrix<T> &left, Matrix<T> &right)
 {
     bool rowEqual = left.getRowSize() != right.getRowSize();
     bool colEqual = left.getColSize() != right.getColSize();
+    int row = 0;
+    int column = 0;
+    Matrix<T> newMatrix;
     if (rowEqual && colEqual)
     {
-        int row = left.getRowSize();
-        int column = left.getColSize();
-        Matrix<T> newMatrix = Matrix<T>(row, column);
+        row = left.getRowSize();
+        column = left.getColSize();
+        newMatrix = Matrix<T>(row, column);
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < column; j++)
             {
-                newMatrix.at(i)[j] = left.at(i)[j] + right.rows.at(i)[j]; // copy contents
+                newMatrix(i, j) = left(i, j) + right(i, j); // copy contents
             }
         }
+
+        return newMatrix;
+    }
+    else
+    {
+
+        newMatrix = Matrix<T>(row, column);
+        return newMatrix;
     }
 }
 
+template <typename T>
+ostream &operator<<(ostream &out, Matrix<T> &matrix)
+{
+
+    return out;
+}
 int main()
 {
     // string Name;
