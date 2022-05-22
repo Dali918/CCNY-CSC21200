@@ -13,7 +13,7 @@ public:
     // default constructor
     Matrix() {}
     // constructor with input
-    Matrix(const int row, const int column);
+    Matrix(const int row, const int column, T value);
     // copy constructor
     Matrix(const Matrix<T> &matrix);
     // destructor
@@ -30,14 +30,15 @@ private:
 };
 
 template <typename T>
-Matrix<T>::Matrix(const int row, const int column)
+Matrix<T>::Matrix(const int row, const int column, T value = NULL)
 {
     this->row_size = row;
     this->column_size = column;
     rows.resize(this->row_size);
     for (int i = 0; i < this->row_size; i++)
     {
-        rows.at(i) = new T *[this->column_size];
+        rows.at(i) = new T *[this->column_size]
+        { value };
     }
 }
 
